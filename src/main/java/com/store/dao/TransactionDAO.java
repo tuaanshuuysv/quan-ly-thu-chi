@@ -6,7 +6,9 @@ import com.store.utils.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TransactionDAO {
 
@@ -128,4 +130,35 @@ public class TransactionDAO {
         }
         return false;
     }
+    
+    public Map<String, Double> getIncomeStats() {
+        Map<String, Double> stats = new HashMap<>();
+        String sql = "SELECT c.name, SUM(t.amount) as total FROM transactions t " +
+                     "JOIN categories c ON t.category_id = c.id WHERE c.type = 'INCOME' " +
+                     "GROUP BY c.name";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                stats.put(rs.getString("name"), rs.getDouble("total"));
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return stats;
+    }
+    
+    
+    public Map<String, Double> getExpenseStats() {
+		Map<String, Double> stats = new HashMap<>();
+		String sql = "SELECT c.name, SUM(t.amount) as total FROM transactions t " +
+					 "JOIN categories c ON t.category_id = c.id WHERE c.type = 'EXPENSE' " +
+					 "GROUP BY c.name";
+		try (Connection conn = DBConnection.getConnection();
+			 PreparedStatement ps = conn.prepareStatement(sql);
+			 ResultSet rs = ps.executeQuery()) {
+			while (rs.next()) {
+				stats.put(rs.getString("name"), rs.getDouble("total"));
+			}
+		} catch (Exception e) { e.printStackTrace(); }
+		return stats;
+	}
 }

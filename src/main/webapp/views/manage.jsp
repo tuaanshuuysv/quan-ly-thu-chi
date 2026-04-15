@@ -44,7 +44,7 @@
         <a href="${pageContext.request.contextPath}/add-transaction">📝 Thêm Giao Dịch</a>
         <a href="${pageContext.request.contextPath}/manage?type=INCOME" <%= "INCOME".equals(currentType) ? "style='background:#007bff;'" : "" %>>💰 Quản lý Khoản Thu</a>
         <a href="${pageContext.request.contextPath}/manage?type=EXPENSE" <%= "EXPENSE".equals(currentType) ? "style='background:#007bff;'" : "" %>>💸 Quản lý Khoản Chi</a>
-        <a href="#">📊 Thống kê - Báo cáo</a>
+        <a href="${pageContext.request.contextPath}/statistics">📊 Thống kê - Báo cáo</a>
     </div>
 
     <div class="main-content">

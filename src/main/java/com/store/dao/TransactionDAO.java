@@ -81,4 +81,51 @@ public class TransactionDAO {
 		}
 		return list;
 	}
+	public List<Transaction> getAllTransactions(String typeFilter) {
+        List<Transaction> list = new java.util.ArrayList<>();
+        String sql = "SELECT t.*, c.name as category_name, c.type as category_type " +
+                     "FROM transactions t JOIN categories c ON t.category_id = c.id ";
+        
+        // Nếu có truyền loại filter vào thì thêm điều kiện WHERE
+        if (typeFilter != null && !typeFilter.isEmpty()) {
+            sql += "WHERE c.type = ? ";
+        }
+        sql += "ORDER BY t.transaction_date DESC"; // Mới nhất lên đầu
+                     
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            if (typeFilter != null && !typeFilter.isEmpty()) {
+                ps.setString(1, typeFilter);
+            }
+            
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Transaction t = new Transaction();
+                t.setId(rs.getInt("id"));
+                t.setAmount(rs.getDouble("amount"));
+                t.setTransactionDate(rs.getDate("transaction_date"));
+                t.setNote(rs.getString("note"));
+                t.setCategoryName(rs.getString("category_name"));
+                t.setCategoryType(rs.getString("category_type"));
+                list.add(t);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    // 2. Xóa giao dịch theo ID
+    public boolean deleteTransaction(int id) {
+        String sql = "DELETE FROM transactions WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

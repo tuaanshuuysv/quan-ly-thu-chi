@@ -8,7 +8,7 @@ public class DBConnection {
     // Thay đổi thông tin theo cấu hình máy của bạn
     private static final String URL = "jdbc:mysql://localhost:3306/quanly_thuchi";
     private static final String USER = "root";
-    private static final String PASSWORD = "password_cua_ban";
+    private static final String PASSWORD = "huy2406";
 
     public static Connection getConnection() {
         Connection conn = null;

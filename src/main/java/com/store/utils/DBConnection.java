@@ -5,10 +5,13 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBConnection {
-    // Thay đổi thông tin theo cấu hình máy của bạn
-    private static final String URL = "jdbc:mysql://localhost:3306/quanly_thuchi";
+	private static String getDbHost() {
+        String host = System.getenv("DB_HOST");
+        return (host != null) ? host : "localhost";
+    }
+	private static final String URL = "jdbc:mysql://" + getDbHost() + ":3306/quanly_thuchi";
     private static final String USER = "root";
-    private static final String PASSWORD = "huy2406";
+    private static final String PASSWORD = "huy2406"; 
 
     public static Connection getConnection() {
         Connection conn = null;

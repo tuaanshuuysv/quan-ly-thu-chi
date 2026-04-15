@@ -9,6 +9,8 @@ public class Transaction {
     private String note;
     private int categoryId;
     private int userId;
+    private String categoryName; 
+    private String categoryType; 
 
     public Transaction() {}
 
@@ -39,4 +41,10 @@ public class Transaction {
 
     public int getUserId() { return userId; }
     public void setUserId(int userId) { this.userId = userId; }
+    
+    public String getCategoryName() { return categoryName; }
+    public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
+
+    public String getCategoryType() { return categoryType; }
+    public void setCategoryType(String categoryType) { this.categoryType = categoryType; }
 }

@@ -104,10 +104,81 @@
             <a href="${pageContext.request.contextPath}/logout" class="btn-logout">Đăng xuất</a>
         </div>
 
-        <div class="welcome-card">
-            <h1>Chào mừng đến với Hệ thống Quản lý Thu Chi</h1>
-            <p>Hãy chọn các chức năng bên menu trái để bắt đầu làm việc.</p>
+        <style>
+            .stats-container { display: flex; gap: 20px; margin-bottom: 30px; }
+            .stat-card { flex: 1; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); text-align: center; }
+            .stat-card h3 { margin: 0; color: #7f8c8d; font-size: 16px; text-transform: uppercase; }
+            .stat-card .amount { font-size: 24px; font-weight: bold; margin-top: 10px; }
+            .amount.income { color: #2ecc71; }
+            .amount.expense { color: #e74c3c; }
+            .amount.balance { color: #3498db; }
+            
+            table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+            th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+            th { background-color: #34495e; color: white; }
+            .badge { padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; color: white; }
+            .badge-thu { background-color: #2ecc71; }
+            .badge-chi { background-color: #e74c3c; }
+        </style>
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <h3>Tổng Thu</h3>
+                <div class="amount income">+ <%= String.format("%,.0f", request.getAttribute("totalIncome")) %> VNĐ</div>
+            </div>
+            <div class="stat-card">
+                <h3>Tổng Chi</h3>
+                <div class="amount expense">- <%= String.format("%,.0f", request.getAttribute("totalExpense")) %> VNĐ</div>
+            </div>
+            <div class="stat-card">
+                <h3>Số Dư (Lợi Nhuận)</h3>
+                <div class="amount balance"><%= String.format("%,.0f", request.getAttribute("balance")) %> VNĐ</div>
+            </div>
         </div>
+
+        <h3>Lịch sử giao dịch gần đây</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Ngày</th>
+                    <th>Danh mục</th>
+                    <th>Loại</th>
+                    <th>Số tiền (VNĐ)</th>
+                    <th>Ghi chú</th>
+                </tr>
+            </thead>
+            <tbody>
+                <%@ page import="java.util.List" %>
+                <%@ page import="com.store.model.Transaction" %>
+                <%
+                    List<Transaction> list = (List<Transaction>) request.getAttribute("recentList");
+                    if(list != null && !list.isEmpty()) {
+                        for(Transaction t : list) {
+                            boolean isIncome = "INCOME".equals(t.getCategoryType());
+                %>
+                <tr>
+                    <td><%= t.getTransactionDate() %></td>
+                    <td><%= t.getCategoryName() %></td>
+                    <td>
+                        <span class="badge <%= isIncome ? "badge-thu" : "badge-chi" %>">
+                            <%= isIncome ? "THU" : "CHI" %>
+                        </span>
+                    </td>
+                    <td class="<%= isIncome ? "amount income" : "amount expense" %>">
+                        <%= isIncome ? "+" : "-" %> <%= String.format("%,.0f", t.getAmount()) %>
+                    </td>
+                    <td><%= t.getNote() != null ? t.getNote() : "" %></td>
+                </tr>
+                <%
+                        }
+                    } else {
+                %>
+                <tr>
+                    <td colspan="5" style="text-align: center;">Chưa có giao dịch nào!</td>
+                </tr>
+                <%  } %>
+            </tbody>
+        </table>
     </div>
 
 </body>

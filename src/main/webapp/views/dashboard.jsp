@@ -93,7 +93,7 @@
     <div class="sidebar">
         <h2>💰 QL Thu Chi</h2>
         <a href="${pageContext.request.contextPath}/dashboard" class="active">Trang chủ (Dashboard)</a>
-        <a href="#">📝 Quản lý Khoản Thu</a>
+        <a href="${pageContext.request.contextPath}/add-transaction">📝 Thêm Giao Dịch</a>
         <a href="#">📝 Quản lý Khoản Chi</a>
         <a href="#">📊 Thống kê - Báo cáo</a>
     </div>
